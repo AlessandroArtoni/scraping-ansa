@@ -1,4 +1,5 @@
 #todo: aprire articoli e prendere le informazioni ma serve l'autenticazione
+#todo: push database
 
 #Second code
 import requests
