@@ -17,7 +17,7 @@ for company in list_of_companies:
     html = opener.open("http://www.finanza.com/cerca.asp?Text=" + str(nameCompany) + "&pagina=" + str(pageIndex))
     txt = html.read()
     #Here i calculate the maximum page per company
-    indexRicercaNotizie = txt.find("Ricerca notizie: ");
+    indexRicercaNotizie = txt.find("Ricerca notizie: ")
     maximumNumberResultsBlock = txt[indexRicercaNotizie: txt.find('contenenti', indexRicercaNotizie)]
 
     if 'oltre' in maximumNumberResultsBlock:
@@ -35,7 +35,9 @@ for company in list_of_companies:
         while count < 10:
             #Block of the article
             indexPositionStringBegin = txt.find('<div class="div_articolo">', nextBlock, len(txt))
-            indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
+            #indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
+            # mettere 2 come inizio stringa ha poco senso, se proprio bisogna metterla ha senso usare l'index di inizio
+            indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', indexPositionStringBegin)
             block = txt[indexPositionStringBegin:indexPositionStringEnd]
 
             indexStartArticleLink = block.find('href') + 6
