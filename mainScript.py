@@ -53,9 +53,12 @@ for company in list_of_companies:
             title = block[indexStartTitle:indexEndTitle]
             #Potrei filtrare le informazioni - solo Italia...
 
+            #Date (TS)
             #Data (TS)
             block = block[indexStartTitle:len(block)]
             indexStartDate = block.find('data">') + 6
+            #il -5 serve per eliminare l'orario dalla data
+            indexEndDate = block.find('</span>', indexStartDate) - 5
             indexEndDate = block.find('</span>', indexStartDate)
             date = block[indexStartDate:indexEndDate]
             #I format date better
@@ -82,7 +85,12 @@ for company in list_of_companies:
                 #corpoNotizia todo: clear body
                 indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
                 indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
+<<<<<<< Updated upstream
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
+=======
+                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia]
+                #ora puliamo il corpo della notizia da tutte le pubblicita'
+>>>>>>> Stashed changes
 
             print nameCompany, ' ', count, ':', title, date, nomeAutore, link
             # print subtitle
