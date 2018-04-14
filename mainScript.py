@@ -80,7 +80,7 @@ for company in list_of_companies:
                 #corpoNotizia todo: clear body
                 indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
                 indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
-                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia]
+                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
 
             print nameCompany, ' ', count, ':', title, date, nomeAutore, link
             # print subtitle
