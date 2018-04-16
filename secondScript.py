@@ -9,26 +9,25 @@ opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 #todo: check tags properly
 
-list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca Generali', 'Banco BPM', 'BPER','Brembo', 'Buzzi Unicem',
+list_of_companies = ['A2A', 'Atlantia', 'Azimut', 'Banca Generali', 'Banco BPM', 'BPER','Brembo', 'Buzzi Unicem',
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa Sanpaolo',
                      'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli',
                      'Poste italiane',
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
-'''
-with open('secondScript.txt', 'a') as the_file:
+with open('secondScriptGO.txt', 'a') as the_file:
     the_file.write('START OF THE FILE\n')
-'''
+
 
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
-    '''
-    with open('secondScript.txt', 'a') as the_file:
+
+    with open('secondScriptGO.txt', 'a') as the_file:
         the_file.write('\nEvaluating company #')
         the_file.write(str(list_of_companies.index(company)))
         the_file.write('out of #41\n')
-    '''
+
     # sezione '...' is actually 'Economia'
     post_fields = {'tiponotizia': '',
                    'any': company,
@@ -111,46 +110,52 @@ for company in list_of_companies:
 
             body = 'Articolo non disponibile'
             if len(date) > 0 and link.find('professional') < 0:
+                try:
+                    articlePageUrl = opener.open(link)
+                    articlePage = articlePageUrl.read()
 
-                articlePageUrl = opener.open(link)
-                articlePage = articlePageUrl.read()
+                    subtitleIndexStart = articlePage.find('news-stit')
+                    subtitleIndexEnd = articlePage.find('</h2>', subtitleIndexStart)
+                    subtitle = articlePage[subtitleIndexStart:subtitleIndexEnd]
 
-                subtitleIndexStart = articlePage.find('news-stit')
-                subtitleIndexEnd = articlePage.find('</h2>', subtitleIndexStart)
-                subtitle = articlePage[subtitleIndexStart:subtitleIndexEnd]
-
-                bodyStartIndex = articlePage.find('news-txt')
-                bodyStartIndex = articlePage.find('<p>', bodyStartIndex)+3
-                bodyEndIndex = articlePage.find('</p>', bodyStartIndex)
-                body = articlePage[bodyStartIndex:bodyEndIndex].decode("utf-8")
-                # I clean the body
-                body = body.replace("\n", "")
-                body = body.replace("  ", " ")
-                body = body.replace("   ", "")
-                body = body.replace("\t", " ")
-                body = body.replace("<br>", "")
-                body = body.replace("</br>", '')
-                body = body.replace('<br/>', '')
-                body = body.replace("&nbsp;", "")
-                body = body.encode("utf-8")
+                    bodyStartIndex = articlePage.find('news-txt')
+                    bodyStartIndex = articlePage.find('<p>', bodyStartIndex)+3
+                    bodyEndIndex = articlePage.find('</p>', bodyStartIndex)
+                    body = articlePage[bodyStartIndex:bodyEndIndex].decode("utf-8")
+                    # I clean the body
+                    body = body.replace("\n", "")
+                    body = body.replace("  ", " ")
+                    body = body.replace("   ", "")
+                    body = body.replace("\t", " ")
+                    body = body.replace("<br>", "")
+                    body = body.replace("</br>", '')
+                    body = body.replace('<br/>', '')
+                    body = body.replace("&nbsp;", "")
+                    body = body.encode("utf-8")
+                except:
+                    print 'Url was not found'
 
             print company, conta, '/', numResults, ':', title, date, category, link, abstract
             print 'ARTICOLO: ', body
-            '''
-            with open('secondScript.txt', 'a') as the_file:
+
+            with open('secondScriptGO.txt', 'a') as the_file:
                 the_file.write('\n\n ')
                 the_file.write(company)
+                the_file.write(' ')
                 the_file.write(str(conta))
                 the_file.write(' / ')
                 the_file.write(str(numResults))
-                the_file.write(' : ')
+                the_file.write(' : date: ')
                 the_file.write(str(date))
+                the_file.write(' category: ')
                 the_file.write(category)
+                the_file.write(' link: ')
                 the_file.write(link)
+                the_file.write(' abstract: ')
                 the_file.write(abstract)
                 the_file.write('\n ARTICOLO: ')
                 the_file.write(body)
-            '''
+
             # I consider the next article block
             page = page[newsIndexStart+absIndexEnd:len(page)]
             conta = conta + 1
