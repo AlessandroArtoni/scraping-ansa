@@ -17,7 +17,7 @@ for company in list_of_companies:
     html = opener.open("http://www.finanza.com/cerca.asp?Text=" + str(nameCompany) + "&pagina=" + str(pageIndex))
     txt = html.read()
     #Here i calculate the maximum page per company
-    indexRicercaNotizie = txt.find("Ricerca notizie: ");
+    indexRicercaNotizie = txt.find("Ricerca notizie: ")
     maximumNumberResultsBlock = txt[indexRicercaNotizie: txt.find('contenenti', indexRicercaNotizie)]
 
     if 'oltre' in maximumNumberResultsBlock:
@@ -35,7 +35,9 @@ for company in list_of_companies:
         while count < 10:
             #Block of the article
             indexPositionStringBegin = txt.find('<div class="div_articolo">', nextBlock, len(txt))
-            indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
+            #indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
+            # mettere 2 come inizio stringa ha poco senso, se proprio bisogna metterla ha senso usare l'index di inizio
+            indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', indexPositionStringBegin)
             block = txt[indexPositionStringBegin:indexPositionStringEnd]
 
             indexStartArticleLink = block.find('href') + 6
@@ -51,9 +53,12 @@ for company in list_of_companies:
             title = block[indexStartTitle:indexEndTitle]
             #Potrei filtrare le informazioni - solo Italia...
 
+            #Date (TS)
             #Data (TS)
             block = block[indexStartTitle:len(block)]
             indexStartDate = block.find('data">') + 6
+            #il -5 serve per eliminare l'orario dalla data
+            indexEndDate = block.find('</span>', indexStartDate) - 5
             indexEndDate = block.find('</span>', indexStartDate)
             date = block[indexStartDate:indexEndDate]
             #I format date better
@@ -80,9 +85,44 @@ for company in list_of_companies:
                 #corpoNotizia todo: clear body
                 indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
                 indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
+#<<<<<<< Updated upstream
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
+#=======
+                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia]
+                #ora puliamo il corpo della notizia da tutte le pubblicita'
 
-            print nameCompany, ' ', count, ':', title, date, nomeAutore, link
+                indexStartAd = bodyArticle.find('<div')
+                while indexStartAd != -1:
+                    newStart = indexStartAd
+                    countDent = 1
+                    while countDent > 0:
+                        indexIn = bodyArticle.find('<div', newStart)
+                        indexEnd = bodyArticle.find('</div>', newStart)
+                        if indexIn < indexEnd & indexIn > 0:
+                            countDent = countDent + 1
+                            newStart = indexIn
+                        else:
+                            countDent = countDent - 1
+                            newStart = indexEnd
+                    bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
+                    indexStartAd = bodyArticle.find('<div')
+                print(bodyArticle)
+                bodyArticle = bodyArticle.replace("<strong>", "")
+                bodyArticle = bodyArticle.replace("<br>", "")
+                bodyArticle = bodyArticle.replace("<p>", "")
+                bodyArticle = bodyArticle.replace("</p>", "")
+                bodyArticle = bodyArticle.replace("</div>", "")
+                bodyArticle = bodyArticle.replace("<br />", "")
+                bodyArticle = bodyArticle.replace("</strong>", "")
+                print(bodyArticle)
+
+
+
+
+
+#>>>>>>> Stashed changes
+
+            #print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
             # print subtitle
             # print bodyArticle
             count = count + 1
