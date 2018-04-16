@@ -109,7 +109,11 @@ for company in list_of_companies:
                 print(bodyArticle)
                 bodyArticle = bodyArticle.replace("<strong>", "")
                 bodyArticle = bodyArticle.replace("<br>", "")
-                bodyArticle = bodyArticle.replace("<p>", "")
+                indexP = bodyArticle.find('<p')
+                while indexP > 0:
+                    indexEndP = bodyArticle.find('>', indexP)
+                    bodyArticle = bodyArticle[:indexP] + bodyArticle[indexEndP+1:]
+                    indexP = bodyArticle.find('<p')
                 bodyArticle = bodyArticle.replace("</p>", "")
                 bodyArticle = bodyArticle.replace("</div>", "")
                 bodyArticle = bodyArticle.replace("<br />", "")
