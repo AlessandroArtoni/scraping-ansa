@@ -106,12 +106,23 @@ for company in list_of_companies:
                             newStart = indexEnd
                     bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
                     indexStartAd = bodyArticle.find('<div')
+                print(bodyArticle)
+                bodyArticle = bodyArticle.replace("<strong>", "")
+                bodyArticle = bodyArticle.replace("<br>", "")
+                bodyArticle = bodyArticle.replace("<p>", "")
+                bodyArticle = bodyArticle.replace("</p>", "")
+                bodyArticle = bodyArticle.replace("</div>", "")
+                bodyArticle = bodyArticle.replace("<br />", "")
+                bodyArticle = bodyArticle.replace("</strong>", "")
+                print(bodyArticle)
+
+
 
 
 
 #>>>>>>> Stashed changes
 
-            print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+            #print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
             # print subtitle
             # print bodyArticle
             count = count + 1
