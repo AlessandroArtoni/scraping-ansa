@@ -85,14 +85,33 @@ for company in list_of_companies:
                 #corpoNotizia todo: clear body
                 indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
                 indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
-=======
+#=======
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia]
                 #ora puliamo il corpo della notizia da tutte le pubblicita'
->>>>>>> Stashed changes
 
-            print nameCompany, ' ', count, ':', title, date, nomeAutore, link
+                indexStartAd = bodyArticle.find('<div')
+                while indexStartAd != -1:
+                    newStart = indexStartAd
+                    countDent = 1
+                    while countDent > 0:
+                        indexIn = bodyArticle.find('<div', newStart)
+                        indexEnd = bodyArticle.find('</div>', newStart)
+                        if indexIn < indexEnd & indexIn > 0:
+                            countDent = countDent + 1
+                            newStart = indexIn
+                        else:
+                            countDent = countDent - 1
+                            newStart = indexEnd
+                    bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
+                    indexStartAd = bodyArticle.find('<div')
+
+
+
+#>>>>>>> Stashed changes
+
+            print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
             # print subtitle
             # print bodyArticle
             count = count + 1
