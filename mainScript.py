@@ -88,7 +88,6 @@ for company in list_of_companies:
 #<<<<<<< Updated upstream
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
 #=======
-                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia]
                 #ora puliamo il corpo della notizia da tutte le pubblicita'
 
                 indexStartAd = bodyArticle.find('<div')
@@ -115,6 +114,18 @@ for company in list_of_companies:
                     indexP = bodyArticle.find('<p')
                 bodyArticle = bodyArticle.replace("</p>", "")
                 bodyArticle = bodyArticle.replace("&agrave;", "a'")
+                bodyArticle = bodyArticle.replace("&Agrave;", "A'")
+                bodyArticle = bodyArticle.replace("&Egrave;", "E'")
+                bodyArticle = bodyArticle.replace("&egrave;", "e'")
+                bodyArticle = bodyArticle.replace("&Eacute;", "E'")
+                bodyArticle = bodyArticle.replace("&eacute;", "e'")
+                bodyArticle = bodyArticle.replace("&Iacute;", "I'")
+                bodyArticle = bodyArticle.replace("&Ograve;", "O'")
+                bodyArticle = bodyArticle.replace("&ograve;", "o'")
+                bodyArticle = bodyArticle.replace("&Oacute;", "O'")
+                bodyArticle = bodyArticle.replace("&oacute;", "o'")
+                bodyArticle = bodyArticle.replace("&Uacute;", "U'")
+                bodyArticle = bodyArticle.replace("&uacute;", "u'")
                 bodyArticle = bodyArticle.replace("&igrave;", "i'")
                 bodyArticle = bodyArticle.replace("&rsquo;", "'")
                 bodyArticle = bodyArticle.replace("&nbsp;", "")
@@ -123,7 +134,6 @@ for company in list_of_companies:
                 bodyArticle = bodyArticle.replace("</div>", "")
                 bodyArticle = bodyArticle.replace("<br />", "")
                 bodyArticle = bodyArticle.replace("</strong>", "")
-                print(bodyArticle)
 
 
 
@@ -131,9 +141,9 @@ for company in list_of_companies:
 
 #>>>>>>> Stashed changes
 
-            #print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
-            # print subtitle
-            # print bodyArticle
+            print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+            #print subtitle
+            #print bodyArticle
             count = count + 1
             txt = txt[indexPositionStringEnd:len(txt)]
         print 'Page evaluated', pageIndex, ' out of ', maximumTotalNumberOfResults, 'for company #', \
