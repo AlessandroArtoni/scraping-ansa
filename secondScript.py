@@ -2,23 +2,24 @@
 # todo: push database
 
 import requests
+import datetime
 from urllib2 import build_opener
 
+print datetime.datetime.time(datetime.datetime.now())
 # Used to open articles web pages
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 #todo: check tags properly
 
-list_of_companies = ['A2A', 'Atlantia', 'Azimut', 'Banca Generali', 'Banco BPM', 'BPER','Brembo', 'Buzzi Unicem',
-                     'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa Sanpaolo',
-                     'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli',
-                     'Poste italiane',
+list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
+                     'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
+                     'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli', 'Poste+italiane',
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
 with open('secondScriptGO.txt', 'a') as the_file:
     the_file.write('START OF THE FILE\n')
-
+    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
 
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
@@ -88,7 +89,7 @@ for company in list_of_companies:
             title = newsBlock[linkIndexEnd+2:titleIndexEnd]
 
             # Abstract article
-            absIndexStart = newsBlock.find('<p class="search-abs">', titleIndexEnd) + 21
+            absIndexStart = newsBlock.find('<p class="search-abs">', titleIndexEnd) + 22
             absIndexEnd = newsBlock.find('</p>')
 
             abstract = newsBlock[absIndexStart:absIndexEnd].encode('utf-8')
@@ -139,25 +140,28 @@ for company in list_of_companies:
             print 'ARTICOLO: ', body
 
             with open('secondScriptGO.txt', 'a') as the_file:
-                the_file.write('\n\n ')
+                the_file.write('\n\n')
                 the_file.write(company)
-                the_file.write(' ')
+                the_file.write(' --- ')
                 the_file.write(str(conta))
                 the_file.write(' / ')
                 the_file.write(str(numResults))
-                the_file.write(' : date: ')
+                the_file.write(' ---- on Date: ')
                 the_file.write(str(date))
-                the_file.write(' category: ')
+                the_file.write('\nTitle: ')
+                the_file.write(title)
+                the_file.write('\nCategory: ')
                 the_file.write(category)
-                the_file.write(' link: ')
+                the_file.write('\nLink: ')
                 the_file.write(link)
-                the_file.write(' abstract: ')
+                the_file.write('\nAbstract: ')
                 the_file.write(abstract)
-                the_file.write('\n ARTICOLO: ')
+                the_file.write('\nARTICOLO: ')
                 the_file.write(body)
 
             # I consider the next article block
-            page = page[newsIndexStart+absIndexEnd:len(page)]
+            # omitting len(page) because [index:] means from index to the end
+            page = page[newsIndexStart+absIndexEnd:]
             conta = conta + 1
             if conta > numRequests:
                 count = count + 12
@@ -184,3 +188,8 @@ for company in list_of_companies:
         # end of articles loop
     # end of companies loop
 # end of file
+print datetime.datetime.time(datetime.datetime.now())
+
+with open('secondScriptGO.txt', 'a') as the_file:
+    the_file.write('\nEND OF THE FILE\n')
+    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
