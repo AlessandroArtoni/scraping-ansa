@@ -106,7 +106,6 @@ for company in list_of_companies:
                             newStart = indexEnd
                     bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
                     indexStartAd = bodyArticle.find('<div')
-                print(bodyArticle)
                 bodyArticle = bodyArticle.replace("<strong>", "")
                 bodyArticle = bodyArticle.replace("<br>", "")
                 indexP = bodyArticle.find('<p')
@@ -115,6 +114,10 @@ for company in list_of_companies:
                     bodyArticle = bodyArticle[:indexP] + bodyArticle[indexEndP+1:]
                     indexP = bodyArticle.find('<p')
                 bodyArticle = bodyArticle.replace("</p>", "")
+                bodyArticle = bodyArticle.replace("&agrave;", "a'")
+                bodyArticle = bodyArticle.replace("&igrave;", "i'")
+                bodyArticle = bodyArticle.replace("&rsquo;", "'")
+                bodyArticle = bodyArticle.replace("&nbsp;", "")
                 bodyArticle = bodyArticle.replace("</em>", "")
                 bodyArticle = bodyArticle.replace("<em>", "")
                 bodyArticle = bodyArticle.replace("</div>", "")
