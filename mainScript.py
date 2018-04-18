@@ -1,4 +1,8 @@
 def cleaning(text):
+    text = text.replace("DIV", "div")
+    text = text.replace("BR", "br")
+    text = text.replace("<P", "<p")
+    text = text.replace("P>", "p>")
     indexStartAd = text.find('<div')
     while indexStartAd != -1:
         newStart = indexStartAd
