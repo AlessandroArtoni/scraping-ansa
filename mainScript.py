@@ -1,49 +1,49 @@
-def cleaning(bodyArticle):
-    indexStartAd = bodyArticle.find('<div')
+def cleaning(text):
+    indexStartAd = text.find('<div')
     while indexStartAd != -1:
         newStart = indexStartAd
         countDent = 1
         while countDent > 0:
-            indexIn = bodyArticle.find('<div', newStart)
-            indexEnd = bodyArticle.find('</div>', newStart)
+            indexIn = text.find('<div', newStart)
+            indexEnd = text.find('</div>', newStart)
             if indexIn < indexEnd & indexIn > 0:
                 countDent = countDent + 1
                 newStart = indexIn
             else:
                 countDent = countDent - 1
                 newStart = indexEnd
-        bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
-        indexStartAd = bodyArticle.find('<div')
-    bodyArticle = bodyArticle.replace("<strong>", "")
-    bodyArticle = bodyArticle.replace("<br>", "")
-    indexP = bodyArticle.find('<p')
+        text = text[:indexStartAd] + text[newStart + 6:]
+        indexStartAd = text.find('<div')
+    text = text.replace("<strong>", "")
+    text = text.replace("<br>", "")
+    indexP = text.find('<p')
     while indexP >= 0:
-        indexEndP = bodyArticle.find('>', indexP)
-        bodyArticle = bodyArticle[:indexP] + bodyArticle[indexEndP + 1:]
-        indexP = bodyArticle.find('<p')
-    bodyArticle = bodyArticle.replace("</p>", "")
-    bodyArticle = bodyArticle.replace("&agrave;", "a'")
-    bodyArticle = bodyArticle.replace("&Agrave;", "A'")
-    bodyArticle = bodyArticle.replace("&Egrave;", "E'")
-    bodyArticle = bodyArticle.replace("&egrave;", "e'")
-    bodyArticle = bodyArticle.replace("&Eacute;", "E'")
-    bodyArticle = bodyArticle.replace("&eacute;", "e'")
-    bodyArticle = bodyArticle.replace("&Iacute;", "I'")
-    bodyArticle = bodyArticle.replace("&Ograve;", "O'")
-    bodyArticle = bodyArticle.replace("&ograve;", "o'")
-    bodyArticle = bodyArticle.replace("&Oacute;", "O'")
-    bodyArticle = bodyArticle.replace("&oacute;", "o'")
-    bodyArticle = bodyArticle.replace("&Uacute;", "U'")
-    bodyArticle = bodyArticle.replace("&uacute;", "u'")
-    bodyArticle = bodyArticle.replace("&igrave;", "i'")
-    bodyArticle = bodyArticle.replace("&rsquo;", "'")
-    bodyArticle = bodyArticle.replace("&nbsp;", "")
-    bodyArticle = bodyArticle.replace("</em>", "")
-    bodyArticle = bodyArticle.replace("<em>", "")
-    bodyArticle = bodyArticle.replace("</div>", "")
-    bodyArticle = bodyArticle.replace("<br />", "")
-    bodyArticle = bodyArticle.replace("</strong>", "")
-    return bodyArticle
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<p')
+    text = text.replace("</p>", "")
+    text = text.replace("&agrave;", "a'")
+    text = text.replace("&Agrave;", "A'")
+    text = text.replace("&Egrave;", "E'")
+    text = text.replace("&egrave;", "e'")
+    text = text.replace("&Eacute;", "E'")
+    text = text.replace("&eacute;", "e'")
+    text = text.replace("&Iacute;", "I'")
+    text = text.replace("&Ograve;", "O'")
+    text = text.replace("&ograve;", "o'")
+    text = text.replace("&Oacute;", "O'")
+    text = text.replace("&oacute;", "o'")
+    text = text.replace("&Uacute;", "U'")
+    text = text.replace("&uacute;", "u'")
+    text = text.replace("&igrave;", "i'")
+    text = text.replace("&rsquo;", "'")
+    text = text.replace("&nbsp;", "")
+    text = text.replace("</em>", "")
+    text = text.replace("<em>", "")
+    text = text.replace("</div>", "")
+    text = text.replace("<br />", "")
+    text = text.replace("</strong>", "")
+    return text
 
 
 #We import the module urlopen
@@ -107,7 +107,6 @@ for company in list_of_companies:
             indexStartDate = block.find('data">') + 6
             #il -5 serve per eliminare l'orario dalla data
             indexEndDate = block.find('</span>', indexStartDate) - 5
-            indexEndDate = block.find('</span>', indexStartDate)
             date = block[indexStartDate:indexEndDate]
             #I format date better
             date = date.replace("&igrave;", "i")
