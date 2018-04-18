@@ -22,6 +22,12 @@ def cleaning(text):
         text = text[:indexP] + text[indexEndP + 1:]
         indexP = text.find('<p')
     text = text.replace("</p>", "")
+    indexP = text.find('<span')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<span')
+    text = text.replace("</span>", "")
     text = text.replace("&agrave;", "a'")
     text = text.replace("&Agrave;", "A'")
     text = text.replace("&Egrave;", "E'")
@@ -142,7 +148,7 @@ for company in list_of_companies:
 
 #>>>>>>> Stashed changes
 
-            print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+                print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
             #print subtitle
             #print bodyArticle
             count = count + 1
