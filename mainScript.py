@@ -1,3 +1,61 @@
+def cleaning(text):
+    text = text.replace("DIV", "div")
+    text = text.replace("BR", "br")
+    text = text.replace("<P", "<p")
+    text = text.replace("P>", "p>")
+    indexStartAd = text.find('<div')
+    while indexStartAd != -1:
+        newStart = indexStartAd
+        countDent = 1
+        while countDent > 0:
+            indexIn = text.find('<div', newStart)
+            indexEnd = text.find('</div>', newStart)
+            if indexIn < indexEnd & indexIn > 0:
+                countDent = countDent + 1
+                newStart = indexIn
+            else:
+                countDent = countDent - 1
+                newStart = indexEnd
+        text = text[:indexStartAd] + text[newStart + 6:]
+        indexStartAd = text.find('<div')
+    text = text.replace("<strong>", "")
+    text = text.replace("<br>", "")
+    indexP = text.find('<p')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<p')
+    text = text.replace("</p>", "")
+    indexP = text.find('<span')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<span')
+    text = text.replace("</span>", "")
+    text = text.replace("&agrave;", "a'")
+    text = text.replace("&Agrave;", "A'")
+    text = text.replace("&Egrave;", "E'")
+    text = text.replace("&egrave;", "e'")
+    text = text.replace("&Eacute;", "E'")
+    text = text.replace("&eacute;", "e'")
+    text = text.replace("&Iacute;", "I'")
+    text = text.replace("&Ograve;", "O'")
+    text = text.replace("&ograve;", "o'")
+    text = text.replace("&Oacute;", "O'")
+    text = text.replace("&oacute;", "o'")
+    text = text.replace("&Uacute;", "U'")
+    text = text.replace("&uacute;", "u'")
+    text = text.replace("&igrave;", "i'")
+    text = text.replace("&rsquo;", "'")
+    text = text.replace("&nbsp;", "")
+    text = text.replace("</em>", "")
+    text = text.replace("<em>", "")
+    text = text.replace("</div>", "")
+    text = text.replace("<br />", "")
+    text = text.replace("</strong>", "")
+    return text
+
+
 #We import the module urlopen
 from urllib2 import build_opener
 
@@ -59,7 +117,6 @@ for company in list_of_companies:
             indexStartDate = block.find('data">') + 6
             #il -5 serve per eliminare l'orario dalla data
             indexEndDate = block.find('</span>', indexStartDate) - 5
-            indexEndDate = block.find('</span>', indexStartDate)
             date = block[indexStartDate:indexEndDate]
             #I format date better
             date = date.replace("&igrave;", "i")
@@ -87,44 +144,17 @@ for company in list_of_companies:
                 indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
 #<<<<<<< Updated upstream
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
+                bodyArticle = cleaning(bodyArticle)
 #=======
-                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia]
-                #ora puliamo il corpo della notizia da tutte le pubblicita'
-
-                indexStartAd = bodyArticle.find('<div')
-                while indexStartAd != -1:
-                    newStart = indexStartAd
-                    countDent = 1
-                    while countDent > 0:
-                        indexIn = bodyArticle.find('<div', newStart)
-                        indexEnd = bodyArticle.find('</div>', newStart)
-                        if indexIn < indexEnd & indexIn > 0:
-                            countDent = countDent + 1
-                            newStart = indexIn
-                        else:
-                            countDent = countDent - 1
-                            newStart = indexEnd
-                    bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
-                    indexStartAd = bodyArticle.find('<div')
-                print(bodyArticle)
-                bodyArticle = bodyArticle.replace("<strong>", "")
-                bodyArticle = bodyArticle.replace("<br>", "")
-                bodyArticle = bodyArticle.replace("<p>", "")
-                bodyArticle = bodyArticle.replace("</p>", "")
-                bodyArticle = bodyArticle.replace("</div>", "")
-                bodyArticle = bodyArticle.replace("<br />", "")
-                bodyArticle = bodyArticle.replace("</strong>", "")
-                print(bodyArticle)
-
 
 
 
 
 #>>>>>>> Stashed changes
 
-            #print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
-            # print subtitle
-            # print bodyArticle
+                print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+            #print subtitle
+            #print bodyArticle
             count = count + 1
             txt = txt[indexPositionStringEnd:len(txt)]
         print 'Page evaluated', pageIndex, ' out of ', maximumTotalNumberOfResults, 'for company #', \
