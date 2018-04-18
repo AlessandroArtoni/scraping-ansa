@@ -1,3 +1,51 @@
+def cleaning(bodyArticle):
+    indexStartAd = bodyArticle.find('<div')
+    while indexStartAd != -1:
+        newStart = indexStartAd
+        countDent = 1
+        while countDent > 0:
+            indexIn = bodyArticle.find('<div', newStart)
+            indexEnd = bodyArticle.find('</div>', newStart)
+            if indexIn < indexEnd & indexIn > 0:
+                countDent = countDent + 1
+                newStart = indexIn
+            else:
+                countDent = countDent - 1
+                newStart = indexEnd
+        bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
+        indexStartAd = bodyArticle.find('<div')
+    bodyArticle = bodyArticle.replace("<strong>", "")
+    bodyArticle = bodyArticle.replace("<br>", "")
+    indexP = bodyArticle.find('<p')
+    while indexP >= 0:
+        indexEndP = bodyArticle.find('>', indexP)
+        bodyArticle = bodyArticle[:indexP] + bodyArticle[indexEndP + 1:]
+        indexP = bodyArticle.find('<p')
+    bodyArticle = bodyArticle.replace("</p>", "")
+    bodyArticle = bodyArticle.replace("&agrave;", "a'")
+    bodyArticle = bodyArticle.replace("&Agrave;", "A'")
+    bodyArticle = bodyArticle.replace("&Egrave;", "E'")
+    bodyArticle = bodyArticle.replace("&egrave;", "e'")
+    bodyArticle = bodyArticle.replace("&Eacute;", "E'")
+    bodyArticle = bodyArticle.replace("&eacute;", "e'")
+    bodyArticle = bodyArticle.replace("&Iacute;", "I'")
+    bodyArticle = bodyArticle.replace("&Ograve;", "O'")
+    bodyArticle = bodyArticle.replace("&ograve;", "o'")
+    bodyArticle = bodyArticle.replace("&Oacute;", "O'")
+    bodyArticle = bodyArticle.replace("&oacute;", "o'")
+    bodyArticle = bodyArticle.replace("&Uacute;", "U'")
+    bodyArticle = bodyArticle.replace("&uacute;", "u'")
+    bodyArticle = bodyArticle.replace("&igrave;", "i'")
+    bodyArticle = bodyArticle.replace("&rsquo;", "'")
+    bodyArticle = bodyArticle.replace("&nbsp;", "")
+    bodyArticle = bodyArticle.replace("</em>", "")
+    bodyArticle = bodyArticle.replace("<em>", "")
+    bodyArticle = bodyArticle.replace("</div>", "")
+    bodyArticle = bodyArticle.replace("<br />", "")
+    bodyArticle = bodyArticle.replace("</strong>", "")
+    return bodyArticle
+
+
 #We import the module urlopen
 from urllib2 import build_opener
 
@@ -87,54 +135,8 @@ for company in list_of_companies:
                 indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
 #<<<<<<< Updated upstream
                 bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
+                bodyArticle = cleaning(bodyArticle)
 #=======
-                #ora puliamo il corpo della notizia da tutte le pubblicita'
-
-                indexStartAd = bodyArticle.find('<div')
-                while indexStartAd != -1:
-                    newStart = indexStartAd
-                    countDent = 1
-                    while countDent > 0:
-                        indexIn = bodyArticle.find('<div', newStart)
-                        indexEnd = bodyArticle.find('</div>', newStart)
-                        if indexIn < indexEnd & indexIn > 0:
-                            countDent = countDent + 1
-                            newStart = indexIn
-                        else:
-                            countDent = countDent - 1
-                            newStart = indexEnd
-                    bodyArticle = bodyArticle[:indexStartAd] + bodyArticle[newStart + 6:]
-                    indexStartAd = bodyArticle.find('<div')
-                bodyArticle = bodyArticle.replace("<strong>", "")
-                bodyArticle = bodyArticle.replace("<br>", "")
-                indexP = bodyArticle.find('<p')
-                while indexP >= 0:
-                    indexEndP = bodyArticle.find('>', indexP)
-                    bodyArticle = bodyArticle[:indexP] + bodyArticle[indexEndP+1:]
-                    indexP = bodyArticle.find('<p')
-                bodyArticle = bodyArticle.replace("</p>", "")
-                bodyArticle = bodyArticle.replace("&agrave;", "a'")
-                bodyArticle = bodyArticle.replace("&Agrave;", "A'")
-                bodyArticle = bodyArticle.replace("&Egrave;", "E'")
-                bodyArticle = bodyArticle.replace("&egrave;", "e'")
-                bodyArticle = bodyArticle.replace("&Eacute;", "E'")
-                bodyArticle = bodyArticle.replace("&eacute;", "e'")
-                bodyArticle = bodyArticle.replace("&Iacute;", "I'")
-                bodyArticle = bodyArticle.replace("&Ograve;", "O'")
-                bodyArticle = bodyArticle.replace("&ograve;", "o'")
-                bodyArticle = bodyArticle.replace("&Oacute;", "O'")
-                bodyArticle = bodyArticle.replace("&oacute;", "o'")
-                bodyArticle = bodyArticle.replace("&Uacute;", "U'")
-                bodyArticle = bodyArticle.replace("&uacute;", "u'")
-                bodyArticle = bodyArticle.replace("&igrave;", "i'")
-                bodyArticle = bodyArticle.replace("&rsquo;", "'")
-                bodyArticle = bodyArticle.replace("&nbsp;", "")
-                bodyArticle = bodyArticle.replace("</em>", "")
-                bodyArticle = bodyArticle.replace("<em>", "")
-                bodyArticle = bodyArticle.replace("</div>", "")
-                bodyArticle = bodyArticle.replace("<br />", "")
-                bodyArticle = bodyArticle.replace("</strong>", "")
-
 
 
 
