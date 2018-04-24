@@ -5,6 +5,70 @@ import requests
 import datetime
 from urllib2 import build_opener
 
+def cleaning(text):
+    text = text.replace("DIV", "div")
+    text = text.replace("BR", "br")
+    text = text.replace("<P", "<p")
+    text = text.replace("P>", "p>")
+    indexStartAd = text.find('<div')
+    while indexStartAd != -1:
+        newStart = indexStartAd
+        countDent = 1
+        while countDent > 0:
+            indexIn = text.find('<div', newStart)
+            indexEnd = text.find('</div>', newStart)
+            if indexIn < indexEnd & indexIn > 0:
+                countDent = countDent + 1
+                newStart = indexIn
+            else:
+                countDent = countDent - 1
+                newStart = indexEnd
+        text = text[:indexStartAd] + text[newStart + 6:]
+        indexStartAd = text.find('<div')
+    text = text.replace("<strong>", "")
+    text = text.replace("<br>", "")
+    indexP = text.find('<p')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<p')
+    text = text.replace("</p>", "")
+    indexP = text.find('<span')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<span')
+    text = text.replace("</span>", "")
+    text = text.replace("&agrave;", "a'")
+    text = text.replace("&Agrave;", "A'")
+    text = text.replace("&Egrave;", "E'")
+    text = text.replace("&egrave;", "e'")
+    text = text.replace("&Eacute;", "E'")
+    text = text.replace("&eacute;", "e'")
+    text = text.replace("&Iacute;", "I'")
+    text = text.replace("&Ograve;", "O'")
+    text = text.replace("&ograve;", "o'")
+    text = text.replace("&Oacute;", "O'")
+    text = text.replace("&oacute;", "o'")
+    text = text.replace("&Uacute;", "U'")
+    text = text.replace("&uacute;", "u'")
+    text = text.replace("&igrave;", "i'")
+    text = text.replace("&rsquo;", "'")
+    text = text.replace("&nbsp;", "")
+    text = text.replace("</em>", "")
+    text = text.replace("<em>", "")
+    text = text.replace("</div>", "")
+    text = text.replace("<br />", "")
+    text = text.replace("</strong>", "")
+    #Added some cleaning to the previous function
+    text = text.replace("\n", "")
+    text = text.replace("  ", " ")
+    text = text.replace("   ", "")
+    text = text.replace("\t", " ")
+    text = text.replace('<br/>', '')
+    return text
+
+
 print datetime.datetime.time(datetime.datetime.now())
 # Used to open articles web pages
 opener = build_opener()
@@ -101,11 +165,12 @@ for company in list_of_companies:
             '''
             # I clean the abstract
             # todo: forse replace non e esattamente il metodo migliore da usare
-            abstract = abstract.replace('<p>', '')
+            '''abstract = abstract.replace('<p>', '')
             abstract = abstract.replace('em', '')
             abstract = abstract.replace('<>', '')
             abstract = abstract.replace('</>', '')
-            abstract = abstract.replace('\n', '')
+            abstract = abstract.replace('\n', '')'''
+            abstract = cleaning(abstract)
 
             count = count + 1
 
@@ -124,14 +189,15 @@ for company in list_of_companies:
                     bodyEndIndex = articlePage.find('</p>', bodyStartIndex)
                     body = articlePage[bodyStartIndex:bodyEndIndex].decode("utf-8")
                     # I clean the body
-                    body = body.replace("\n", "")
+                    '''body = body.replace("\n", "")
                     body = body.replace("  ", " ")
                     body = body.replace("   ", "")
                     body = body.replace("\t", " ")
                     body = body.replace("<br>", "")
                     body = body.replace("</br>", '')
                     body = body.replace('<br/>', '')
-                    body = body.replace("&nbsp;", "")
+                    body = body.replace("&nbsp;", "")'''
+                    body = cleaning(body)
                     body = body.encode("utf-8")
                 except:
                     print 'Url was not found'
