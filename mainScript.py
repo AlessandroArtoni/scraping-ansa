@@ -71,7 +71,6 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
 for company in list_of_companies:
     nameCompany = company
     pageIndex = 1
-
     html = opener.open("http://www.finanza.com/cerca.asp?Text=" + str(nameCompany) + "&pagina=" + str(pageIndex))
     txt = html.read()
     #Here i calculate the maximum page per company
@@ -131,30 +130,21 @@ for company in list_of_companies:
             #Posso farlo pero solo se esiste l'articolo (siccome ci sono 7 / 8 / 10 articoli a pagina mi conviene fare cosi
             nomeAutore = ''
             if len(title) > 1:
-                articlePageUrl = opener.open(link)
-                articlePage = articlePageUrl.read()
-                #Autore
-                indexStartDivAutore = articlePage.find('div_autore')
-                indexStartAutore = articlePage.find('<h3>', indexStartDivAutore) + 4
-                indexEndAutore = articlePage.find('</h3>', indexStartAutore)
-                nomeAutore = articlePage[indexStartAutore:indexEndAutore]
-
-                #corpoNotizia todo: clear body
-                indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
-                indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
-#<<<<<<< Updated upstream
-                bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
-                bodyArticle = cleaning(bodyArticle)
-#=======
-
-
-
-
-#>>>>>>> Stashed changes
-
-                print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
-            #print subtitle
-            #print bodyArticle
+                try:
+                    articlePageUrl = opener.open(link)
+                    articlePage = articlePageUrl.read()
+                    #Autore
+                    indexStartDivAutore = articlePage.find('div_autore')
+                    indexStartAutore = articlePage.find('<h3>', indexStartDivAutore) + 4
+                    indexEndAutore = articlePage.find('</h3>', indexStartAutore)
+                    nomeAutore = articlePage[indexStartAutore:indexEndAutore]
+                    indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
+                    indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
+                    bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
+                    bodyArticle = cleaning(bodyArticle)
+                    print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+                except:
+                    print 'Url was not found'
             count = count + 1
             txt = txt[indexPositionStringEnd:len(txt)]
         print 'Page evaluated', pageIndex, ' out of ', maximumTotalNumberOfResults, 'for company #', \
