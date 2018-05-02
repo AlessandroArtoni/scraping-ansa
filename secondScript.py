@@ -81,14 +81,14 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
-with open('secondScriptGO.txt', 'a') as the_file:
+with open('secondScriptFINAL.txt', 'a') as the_file:
     the_file.write('START OF THE FILE\n')
     the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
 
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
 
-    with open('secondScriptGO.txt', 'a') as the_file:
+    with open('secondScriptFINAL.txt', 'a') as the_file:
         the_file.write('\nEvaluating company #')
         the_file.write(str(list_of_companies.index(company)))
         the_file.write('out of #41\n')
@@ -205,7 +205,7 @@ for company in list_of_companies:
             print company, conta, '/', numResults, ':', title, date, category, link, abstract
             print 'ARTICOLO: ', body
 
-            with open('secondScriptGO.txt', 'a') as the_file:
+            with open('secondScriptFINAL.txt', 'a') as the_file:
                 the_file.write('\n\n')
                 the_file.write(company)
                 the_file.write(' --- ')
@@ -256,6 +256,6 @@ for company in list_of_companies:
 # end of file
 print datetime.datetime.time(datetime.datetime.now())
 
-with open('secondScriptGO.txt', 'a') as the_file:
+with open('secondScriptFINAL.txt', 'a') as the_file:
     the_file.write('\nEND OF THE FILE\n')
     the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
