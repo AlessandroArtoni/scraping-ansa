@@ -53,11 +53,45 @@ def cleaning(text):
     text = text.replace("</div>", "")
     text = text.replace("<br />", "")
     text = text.replace("</strong>", "")
+    '''
+    indexTableStart = text.find('<table')
+    while indexTableStart >= 0:
+        indexTableEnd = text.find('</table>', indexTableStart)
+        text = text[:indexTableStart] + text[indexTableEnd + 8:]
+        indexTableStart = text.find('<table')
+    indexP = text.find('<script')
+    while indexP >= 0:
+        indexEndP = text.find('</script>', indexP)
+        text = text[:indexP] + text[indexEndP + 9:]
+        indexP = text.find('<script')
+    text = text.replace("</form>", "")
+    indexP = text.find('<input')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<input')
+    text = text.replace("</body>", "")
+    text = text.replace("</html>", "")
+    indexP = text.find('<td')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<td')
+        indexP = text.find('<td')
+    indexP = text.find('<tr')
+    while indexP >= 0:
+        indexEndP = text.find('>', indexP)
+        text = text[:indexP] + text[indexEndP + 1:]
+        indexP = text.find('<tr')
+    '''
     return text
 
 
 #We import the module urlopen
 from urllib2 import build_opener
+import pymysql.cursors
+
+connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
 
 opener = build_opener()
@@ -143,6 +177,15 @@ for company in list_of_companies:
                     bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
                     bodyArticle = cleaning(bodyArticle)
                     print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+                    '''
+                    try:
+                        with connection.cursor() as cursor:
+                            query =  "INSERT INTO article (id, date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                            cursor.execute(queryInsert, [self.id, date, finanza.com, economy, title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link])
+                            connection.commit()
+                    except:
+                        print(title)
+                    '''
                 except:
                     print 'Url was not found'
             count = count + 1
