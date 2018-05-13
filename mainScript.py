@@ -89,10 +89,10 @@ def cleaning(text):
 
 #We import the module urlopen
 from urllib2 import build_opener
-import pymysql.cursors
+'''import pymysql.cursors
 
 connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
-
+'''
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
@@ -172,11 +172,24 @@ for company in list_of_companies:
                     indexStartAutore = articlePage.find('<h3>', indexStartDivAutore) + 4
                     indexEndAutore = articlePage.find('</h3>', indexStartAutore)
                     nomeAutore = articlePage[indexStartAutore:indexEndAutore]
+                    indexStartDivLinkedCompanies = articlePage.find('link_azioni')
+                    indexEndDivLinkedCompanies = articlePage.find('</div>', indexStartDivLinkedCompanies)
+                    blockLinkedCompanies = articlePage[indexStartDivLinkedCompanies:indexEndDivLinkedCompanies]
+                    linkedCompanies = ''
+                    if indexStartDivLinkedCompanies >= 0:
+                        indexStartDivLinkedCompanies = blockLinkedCompanies.find('<a')
+                        while indexStartDivLinkedCompanies >= 0:
+                            indexStartLinkedCompanies = blockLinkedCompanies.find('>', indexStartDivLinkedCompanies) + 1
+                            indexEndLinkedCompanies = blockLinkedCompanies.find('</a>', indexStartLinkedCompanies)
+                            linkedCompanies = linkedCompanies + blockLinkedCompanies[indexStartLinkedCompanies:indexEndLinkedCompanies] + ' '
+                            indexStartDivLinkedCompanies = blockLinkedCompanies.find('<a', indexEndLinkedCompanies)
+                    else:
+                        linkedCompanies = 'None'
                     indexStartCorpoNotizia = articlePage.find('corponotizia') + 19
                     indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
                     bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
                     bodyArticle = cleaning(bodyArticle)
-                    print nameCompany, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+                    print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     '''
                     try:
                         with connection.cursor() as cursor:
