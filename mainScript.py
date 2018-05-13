@@ -193,8 +193,8 @@ for company in list_of_companies:
                     '''
                     try:
                         with connection.cursor() as cursor:
-                            query =  "INSERT INTO article (id, date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s)"
-                            cursor.execute(queryInsert, [self.id, date, finanza.com, economy, title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link])
+                            query =  "INSERT INTO article (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s)"
+                            cursor.execute(queryInsert, [date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
                             connection.commit()
                     except:
                         print(title)
