@@ -53,7 +53,6 @@ def cleaning(text):
     text = text.replace("</div>", "")
     text = text.replace("<br />", "")
     text = text.replace("</strong>", "")
-    '''
     indexTableStart = text.find('<table')
     while indexTableStart >= 0:
         indexTableEnd = text.find('</table>', indexTableStart)
@@ -83,16 +82,15 @@ def cleaning(text):
         indexEndP = text.find('>', indexP)
         text = text[:indexP] + text[indexEndP + 1:]
         indexP = text.find('<tr')
-    '''
     return text
 
 
 #We import the module urlopen
 from urllib2 import build_opener
-'''import pymysql.cursors
+import pymysql.cursors
 
 connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
-'''
+
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
