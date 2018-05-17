@@ -4,7 +4,11 @@
 import requests
 import datetime
 from urllib2 import build_opener
+import pymysql
+'''
+connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
+'''
 def cleaning(text):
     text = text.replace("DIV", "div")
     text = text.replace("BR", "br")
@@ -81,17 +85,17 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
-with open('secondScriptFINAL.txt', 'a') as the_file:
+'''with open('secondScriptFINAL.txt', 'a') as the_file:
     the_file.write('START OF THE FILE\n')
-    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
+    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))'''
 
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
 
-    with open('secondScriptFINAL.txt', 'a') as the_file:
+    '''with open('secondScriptFINAL.txt', 'a') as the_file:
         the_file.write('\nEvaluating company #')
         the_file.write(str(list_of_companies.index(company)))
-        the_file.write('out of #41\n')
+        the_file.write('out of #41\n')'''
 
     # sezione '...' is actually 'Economia'
     post_fields = {'tiponotizia': '',
@@ -109,6 +113,7 @@ for company in list_of_companies:
         r = requests.post(url, post_fields)
         page = r.text
         numResultsIndex = page.find('num-result')+12
+
 
     # Handles 2,3,4 ciphers numResults
     try:
@@ -204,8 +209,15 @@ for company in list_of_companies:
 
             print company, conta, '/', numResults, ':', title, date, category, link, abstract
             print 'ARTICOLO: ', body
-
-            with open('secondScriptFINAL.txt', 'a') as the_file:
+            '''try:
+                with connection.cursor() as cursor:
+                    query = "INSERT INTO articles_ansa (date, newspaper, section, title, summary,  body, company, link_page) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(query, [date, "Ansa", category, title, abstract, body, company, link])
+                    connection.commit()
+            except:
+                print(title)
+'''
+            '''with open('secondScriptFINAL.txt', 'a') as the_file:
                 the_file.write('\n\n')
                 the_file.write(company)
                 the_file.write(' --- ')
@@ -223,8 +235,7 @@ for company in list_of_companies:
                 the_file.write('\nAbstract: ')
                 the_file.write(abstract)
                 the_file.write('\nARTICOLO: ')
-                the_file.write(body)
-
+                the_file.write(body)'''
             # I consider the next article block
             # omitting len(page) because [index:] means from index to the end
             page = page[newsIndexStart+absIndexEnd:]

@@ -89,8 +89,8 @@ def cleaning(text):
 from urllib2 import build_opener
 import pymysql.cursors
 
-connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
-
+connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
@@ -187,16 +187,16 @@ for company in list_of_companies:
                     indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
                     bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
                     bodyArticle = cleaning(bodyArticle)
+                    if len(bodyArticle)<10:
+                        bodyArticle = 'None'
                     print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
-                    '''
                     try:
                         with connection.cursor() as cursor:
-                            query =  "INSERT INTO article (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s)"
-                            cursor.execute(queryInsert, [date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s)"
+                            cursor.execute(query, [date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
                             connection.commit()
                     except:
                         print(title)
-                    '''
                 except:
                     print 'Url was not found'
             count = count + 1
