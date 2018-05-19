@@ -200,7 +200,7 @@ for company in list_of_companies:
                         with connection.cursor() as cursor:
                             query = "INSERT INTO articles_finanza_com (date, newspaper, " \
                                     "section, title, eyelet, summary, category_sole, category_davide," \
-                                    " body, company, author, link_page, tagged_companies) " \
+                                    " body, company, author, link_page, tagged_company) " \
                                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                             cursor.execute(query,
