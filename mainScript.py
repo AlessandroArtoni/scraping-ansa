@@ -89,15 +89,17 @@ def cleaning(text):
 from urllib2 import build_opener
 import pymysql
 
-connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio',
+                             charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 # cursorObject = connection.cursor()
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
-                     'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli', 'Poste+italiane',
-                     'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
+                     'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli',
+                     'Poste+italiane','Prysmian', 'Recordati', 'Saipem', 'Ferragamo',
+                     'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 # start cycle
 for company in list_of_companies:
@@ -159,7 +161,8 @@ for company in list_of_companies:
             subtitle = block[indexStartSubTitle:indexEndSubtitle]
 
             # Ora mi sposto e vado sulla pagina del link, per farlo la devo prima aprire e leggere.
-            #Posso farlo pero solo se esiste l'articolo (siccome ci sono 7 / 8 / 10 articoli a pagina mi conviene fare cosi
+            # Posso farlo pero solo se esiste l'articolo
+            # (siccome ci sono 7 / 8 / 10 articoli a pagina mi conviene fare cosi
             nomeAutore = ''
             if len(title) > 1:
                 try:
@@ -179,7 +182,9 @@ for company in list_of_companies:
                         while indexStartDivLinkedCompanies >= 0:
                             indexStartLinkedCompanies = blockLinkedCompanies.find('>', indexStartDivLinkedCompanies) + 1
                             indexEndLinkedCompanies = blockLinkedCompanies.find('</a>', indexStartLinkedCompanies)
-                            linkedCompanies = linkedCompanies + blockLinkedCompanies[indexStartLinkedCompanies:indexEndLinkedCompanies] + ' '
+                            linkedCompanies = \
+                                linkedCompanies + \
+                                blockLinkedCompanies[indexStartLinkedCompanies:indexEndLinkedCompanies] + ' '
                             indexStartDivLinkedCompanies = blockLinkedCompanies.find('<a', indexEndLinkedCompanies)
                     else:
                         linkedCompanies = 'None'
@@ -192,8 +197,12 @@ for company in list_of_companies:
                     # print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                            cursor.execute(query, (date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies))
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, " \
+                                    "section, title, eyelet, summary, category_sole, category_davide," \
+                                    " body, company, author, link_page, tagged_companies) " \
+                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                            cursor.execute(query, [(date, "finanza.com", "economy", title, None, None, None, None,
+                                                    bodyArticle, nameCompany, nomeAutore, link, linkedCompanies)])
                             connection.commit()
                             # sqlShowTablesCommand = "show tables;"
                             # cursor.execute(sqlShowTablesCommand)
