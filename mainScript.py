@@ -201,7 +201,7 @@ for company in list_of_companies:
                             query = "INSERT INTO articles_finanza_com (date, newspaper, " \
                                     "section, title, eyelet, summary, category_sole, category_davide," \
                                     " body, company, author, link_page, tagged_companies) " \
-                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                             cursor.execute(query,
                                            [date, "finanza.com", "economy", title, None, None, None, None,
