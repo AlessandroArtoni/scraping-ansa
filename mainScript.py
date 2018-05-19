@@ -102,6 +102,11 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
                      'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
+with open('logFINANZAdotCOM.txt', 'a') as the_file:
+    the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
+    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
+
+
 # start cycle
 for company in list_of_companies:
     nameCompany = company
@@ -123,11 +128,11 @@ for company in list_of_companies:
     while pageIndex < maximumTotalNumberOfResults:
         nextBlock = 0
         count = 0
-        #NOTA BENE: nella prima magina sono 9
+        # NOTA BENE: nella prima magina sono 9
         while count < 10:
-            #Block of the article
+            # Block of the article
             indexPositionStringBegin = txt.find('<div class="div_articolo">', nextBlock, len(txt))
-            #indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
+            # indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
             # mettere 2 come inizio stringa ha poco senso, se proprio bisogna metterla ha senso usare l'index di inizio
             indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', indexPositionStringBegin)
             block = txt[indexPositionStringBegin:indexPositionStringEnd]
@@ -210,6 +215,25 @@ for company in list_of_companies:
 
                     except Exception, e:
                         print("Can't insert " + str(e))
+                        with open('logFINANZAdotCOM.txt', 'a') as the_file:
+                            the_file.write('\n\n')
+                            the_file.write(company)
+                            the_file.write(' --- ')
+                            the_file.write(str(count))
+                            the_file.write(' / ')
+                            the_file.write(str(maximumTotalNumberOfResults))
+                            the_file.write(' ---- on Date: ')
+                            the_file.write(str(date))
+                            the_file.write('\nTitle: ')
+                            the_file.write(title)
+                            the_file.write('\nLink: ')
+                            the_file.write(link)
+                            the_file.write('\nARTICOLO: ')
+                            the_file.write(bodyArticle)
+                            the_file.write('\nAUTORE: ')
+                            the_file.write(nomeAutore)
+                            the_file.write('\n')
+
                 except:
                     print 'Url was not found'
             count = count + 1

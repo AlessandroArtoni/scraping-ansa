@@ -87,11 +87,11 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
-'''
-with open('fine.txt', 'a') as the_file:
-    the_file.write('START OF THE FILE\n')
+
+with open('logANSA.txt', 'a') as the_file:
+    the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
     the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
-'''
+
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
 
@@ -221,28 +221,28 @@ for company in list_of_companies:
                     connection.commit()
 
             except Exception, e:
-                print("Can't insert " + str(e))
-            '''
-            with open('fine.txt', 'a') as the_file:
-                the_file.write('\n\n')
-                the_file.write(company)
-                the_file.write(' --- ')
-                the_file.write(str(conta))
-                the_file.write(' / ')
-                the_file.write(str(numResults))
-                the_file.write(' ---- on Date: ')
-                the_file.write(str(date))
-                the_file.write('\nTitle: ')
-                the_file.write(title)
-                the_file.write('\nCategory: ')
-                the_file.write(category)
-                the_file.write('\nLink: ')
-                the_file.write(link)
-                the_file.write('\nAbstract: ')
-                the_file.write(abstract)
-                the_file.write('\nARTICOLO: ')
-                the_file.write(body)
-            '''
+                print("Can't insert: logging in the file " + str(e))
+                with open('logANSA.txt', 'a') as the_file:
+                    the_file.write('\n\n')
+                    the_file.write(company)
+                    the_file.write(' --- ')
+                    the_file.write(str(conta))
+                    the_file.write(' / ')
+                    the_file.write(str(numResults))
+                    the_file.write(' ---- on Date: ')
+                    the_file.write(str(date))
+                    the_file.write('\nTitle: ')
+                    the_file.write(title)
+                    the_file.write('\nCategory: ')
+                    the_file.write(category)
+                    the_file.write('\nLink: ')
+                    the_file.write(link)
+                    the_file.write('\nAbstract: ')
+                    the_file.write(abstract)
+                    the_file.write('\nARTICOLO: ')
+                    the_file.write(body)
+                    the_file.write('\n')
+
             # I consider the next article block
             # omitting len(page) because [index:] means from index to the end
             page = page[newsIndexStart+absIndexEnd:]
