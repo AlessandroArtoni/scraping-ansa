@@ -87,10 +87,9 @@ def cleaning(text):
 
 #We import the module urlopen
 from urllib2 import build_opener
-import pymysql
+import MySQLdb
 
-connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio', charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 # cursorObject = connection.cursor()
 
 opener = build_opener()
@@ -194,7 +193,7 @@ for company in list_of_companies:
                     try:
                         with connection.cursor() as cursor:
                             query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s);"
-                            cursor.execute(query, [date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
+                            cursor.execute(query, (date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies))
                             connection.commit()
                             sqlShowTablesCommand = "show tables;"
                             cursor.execute(sqlShowTablesCommand)
