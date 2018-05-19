@@ -87,10 +87,11 @@ def cleaning(text):
 
 #We import the module urlopen
 from urllib2 import build_opener
-import pymysql.cursors
+import pymysql
 
 connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
+# cursorObject = connection.cursor()
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
@@ -99,7 +100,7 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
                      'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli', 'Poste+italiane',
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
-
+# start cycle
 for company in list_of_companies:
     nameCompany = company
     pageIndex = 1
@@ -112,7 +113,7 @@ for company in list_of_companies:
     if 'oltre' in maximumNumberResultsBlock:
         maximumTotalNumberOfResults = 100
     else:
-        #assumptions: always 3 cypher numbers todo: release this assumption
+        #assumptions: always 3 cypher numbers
         tempIndex = maximumNumberResultsBlock.find(':') + 2
         maximumTotalNumberOfResults = maximumNumberResultsBlock[tempIndex:tempIndex+3]
         maximumTotalNumberOfResults = int(maximumTotalNumberOfResults)/10 + 1
@@ -189,14 +190,17 @@ for company in list_of_companies:
                     bodyArticle = cleaning(bodyArticle)
                     if len(bodyArticle)<10:
                         bodyArticle = 'None'
-                    print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+                    # print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s)"
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s);"
                             cursor.execute(query, [date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
                             connection.commit()
+                            sqlShowTablesCommand = "show tables;"
+                            cursor.execute(sqlShowTablesCommand)
+
                     except:
-                        print(title)
+                        print("Can't insert ")
                 except:
                     print 'Url was not found'
             count = count + 1
