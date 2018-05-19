@@ -89,7 +89,7 @@ def cleaning(text):
 from urllib2 import build_opener
 import pymysql
 
-connection = pymysql.connect(host='localhost', port='3306', user='root', password='mamma93', db='mercurio', charset='utf8mb4',
+connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio', charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 # cursorObject = connection.cursor()
 
