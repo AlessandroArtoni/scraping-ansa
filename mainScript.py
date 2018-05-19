@@ -95,12 +95,13 @@ connection = pymysql.connect(host='localhost', port=3306, user='root', password=
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
+'''list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
                      'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli',
                      'Poste+italiane','Prysmian', 'Recordati', 'Saipem', 'Ferragamo',
                      'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
-                     'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
+                     'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']'''
+list_of_companies = ['UBI']
 # start cycle
 for company in list_of_companies:
     nameCompany = company
@@ -118,8 +119,8 @@ for company in list_of_companies:
         tempIndex = maximumNumberResultsBlock.find(':') + 2
         maximumTotalNumberOfResults = maximumNumberResultsBlock[tempIndex:tempIndex+3]
         maximumTotalNumberOfResults = int(maximumTotalNumberOfResults)/10 + 1
-
-    while pageIndex < maximumTotalNumberOfResults:
+    # maximumTotalNumberOfResults
+    while pageIndex < 3:
         nextBlock = 0
         count = 0
         #NOTA BENE: nella prima magina sono 9
@@ -197,14 +198,14 @@ for company in list_of_companies:
                     # print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            '''query = "INSERT INTO articles_finanza_com (date, newspaper, " \
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, " \
                                     "section, title, eyelet, summary, category_sole, category_davide," \
                                     " body, company, author, link_page, tagged_companies) " \
-                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"'''
-                            query = "show tables;"
-                            cursor.execute(query)
-                            '''[(date, "finanza.com", "economy", title, None, None, None, None,
-                                                    bodyArticle, nameCompany, nomeAutore, link, linkedCompanies)])'''
+                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+                            cursor.execute(query,
+                                           [date, "finanza.com", "economy", title, None, None, None, None,
+                                             bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
                             connection.commit()
                             # sqlShowTablesCommand = "show tables;"
                             # cursor.execute(sqlShowTablesCommand)
