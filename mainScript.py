@@ -197,18 +197,20 @@ for company in list_of_companies:
                     # print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, " \
+                            '''query = "INSERT INTO articles_finanza_com (date, newspaper, " \
                                     "section, title, eyelet, summary, category_sole, category_davide," \
                                     " body, company, author, link_page, tagged_companies) " \
-                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                            cursor.execute(query, [(date, "finanza.com", "economy", title, None, None, None, None,
-                                                    bodyArticle, nameCompany, nomeAutore, link, linkedCompanies)])
+                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"'''
+                            query = "show tables;"
+                            cursor.execute(query)
+                            '''[(date, "finanza.com", "economy", title, None, None, None, None,
+                                                    bodyArticle, nameCompany, nomeAutore, link, linkedCompanies)])'''
                             connection.commit()
                             # sqlShowTablesCommand = "show tables;"
                             # cursor.execute(sqlShowTablesCommand)
 
-                    except:
-                        print("Can't insert ")
+                    except Exception, e:
+                        print("Can't insert " + str(e))
                 except:
                     print 'Url was not found'
             count = count + 1
