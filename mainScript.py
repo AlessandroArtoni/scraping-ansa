@@ -95,13 +95,13 @@ connection = pymysql.connect(host='localhost', port=3306, user='root', password=
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-'''list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
+list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
                      'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli',
                      'Poste+italiane','Prysmian', 'Recordati', 'Saipem', 'Ferragamo',
                      'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
-                     'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']'''
-list_of_companies = ['UBI']
+                     'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
+
 # start cycle
 for company in list_of_companies:
     nameCompany = company
@@ -120,7 +120,7 @@ for company in list_of_companies:
         maximumTotalNumberOfResults = maximumNumberResultsBlock[tempIndex:tempIndex+3]
         maximumTotalNumberOfResults = int(maximumTotalNumberOfResults)/10 + 1
     # maximumTotalNumberOfResults
-    while pageIndex < 3:
+    while pageIndex < maximumTotalNumberOfResults:
         nextBlock = 0
         count = 0
         #NOTA BENE: nella prima magina sono 9
@@ -207,8 +207,6 @@ for company in list_of_companies:
                                            [date, "finanza.com", "economy", title, None, None, None, None,
                                              bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
                             connection.commit()
-                            # sqlShowTablesCommand = "show tables;"
-                            # cursor.execute(sqlShowTablesCommand)
 
                     except Exception, e:
                         print("Can't insert " + str(e))
