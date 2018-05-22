@@ -89,7 +89,7 @@ def cleaning(text):
 from urllib2 import build_opener
 import pymysql.cursors
 
-connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4',
+connection = pymysql.connect(host='131.175.120.10', port='22', user='root', password='mamma93', db='mercurio', charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
 opener = build_opener()
@@ -192,8 +192,8 @@ for company in list_of_companies:
                     print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, eyelet, summary, category_sole, category_davide, body, company, author, link_page, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, &s)"
-                            cursor.execute(query, [date, "finanza.com", "economy", title, None, None, None, None, bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                            cursor.execute(query, [date, "finanza.com", "economy", title, bodyArticle, nameCompany, nomeAutore, linkedCompanies])
                             connection.commit()
                     except:
                         print(title)
