@@ -215,7 +215,7 @@ for company in list_of_companies:
             # print 'ARTICOLO: ', body
             try:
                 with connection.cursor() as cursor:
-                    query = "INSERT INTO articles_prova_ansa (date, newspaper, section, title, summary,  " \
+                    query = "INSERT INTO articles_ansa (date, newspaper, section, title, summary,  " \
                             "body, company, link_page) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                     cursor.execute(query, [date, "Ansa", category, title, abstract, body, company, link])
                     connection.commit()
@@ -242,6 +242,8 @@ for company in list_of_companies:
                     the_file.write('\nARTICOLO: ')
                     the_file.write(body)
                     the_file.write('\n')
+                    the_file.write('The exeption was: ')
+                    the_file.write(str(e))
 
             # I consider the next article block
             # omitting len(page) because [index:] means from index to the end
