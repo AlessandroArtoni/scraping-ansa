@@ -5,10 +5,13 @@ import requests
 import datetime
 from urllib2 import build_opener
 import pymysql
-'''
-connection = pymysql.connect(host='localhost', user='root', password='mamma93', db='mercurio', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
-'''
+
+connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio',
+                             charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+
+
+
 def cleaning(text):
     text = text.replace("DIV", "div")
     text = text.replace("BR", "br")
@@ -77,7 +80,6 @@ print datetime.datetime.time(datetime.datetime.now())
 # Used to open articles web pages
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-#todo: check tags properly
 
 list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
@@ -85,17 +87,20 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
-'''with open('secondScriptFINAL.txt', 'a') as the_file:
-    the_file.write('START OF THE FILE\n')
-    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))'''
+
+with open('logANSA.txt', 'a') as the_file:
+    the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
+    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
 
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
 
-    '''with open('secondScriptFINAL.txt', 'a') as the_file:
+    '''
+    with open('fine.txt', 'a') as the_file:
         the_file.write('\nEvaluating company #')
         the_file.write(str(list_of_companies.index(company)))
-        the_file.write('out of #41\n')'''
+        the_file.write('out of #41\n')
+    '''
 
     # sezione '...' is actually 'Economia'
     post_fields = {'tiponotizia': '',
@@ -114,7 +119,6 @@ for company in list_of_companies:
         page = r.text
         numResultsIndex = page.find('num-result')+12
 
-
     # Handles 2,3,4 ciphers numResults
     try:
         numResults = int(page[numResultsIndex:numResultsIndex+4])
@@ -127,9 +131,9 @@ for company in list_of_companies:
             except:
                 print 'Error in numResults ', company, ' will be skipped'
                 numResults = 0
-    #We initialize loop variables. Conta is external loop, count is the more internal
+    # We initialize loop variables. Conta is external loop, count is the more internal
     conta = 1
-    numRequests = 12;
+    numRequests = 12
 
     while conta <= numResults:
         count = 0
@@ -207,35 +211,40 @@ for company in list_of_companies:
                 except:
                     print 'Url was not found'
 
-            print company, conta, '/', numResults, ':', title, date, category, link, abstract
-            print 'ARTICOLO: ', body
-            '''try:
+            print company, conta, '/', numResults #, ':', title, date, category, link, abstract
+            # print 'ARTICOLO: ', body
+            try:
                 with connection.cursor() as cursor:
-                    query = "INSERT INTO articles_ansa (date, newspaper, section, title, summary,  body, company, link_page) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    query = "INSERT INTO articles_ansa (date, newspaper, section, title, summary,  " \
+                            "body, company, link_page) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                     cursor.execute(query, [date, "Ansa", category, title, abstract, body, company, link])
                     connection.commit()
-            except:
-                print(title)
-'''
-            '''with open('secondScriptFINAL.txt', 'a') as the_file:
-                the_file.write('\n\n')
-                the_file.write(company)
-                the_file.write(' --- ')
-                the_file.write(str(conta))
-                the_file.write(' / ')
-                the_file.write(str(numResults))
-                the_file.write(' ---- on Date: ')
-                the_file.write(str(date))
-                the_file.write('\nTitle: ')
-                the_file.write(title)
-                the_file.write('\nCategory: ')
-                the_file.write(category)
-                the_file.write('\nLink: ')
-                the_file.write(link)
-                the_file.write('\nAbstract: ')
-                the_file.write(abstract)
-                the_file.write('\nARTICOLO: ')
-                the_file.write(body)'''
+
+            except Exception, e:
+                print("Can't insert: logging in the file " + str(e))
+                with open('logANSA.txt', 'a') as the_file:
+                    the_file.write('\n\n')
+                    the_file.write(company)
+                    the_file.write(' --- ')
+                    the_file.write(str(conta))
+                    the_file.write(' / ')
+                    the_file.write(str(numResults))
+                    the_file.write(' ---- on Date: ')
+                    the_file.write(str(date))
+                    the_file.write('\nTitle: ')
+                    the_file.write(title)
+                    the_file.write('\nCategory: ')
+                    the_file.write(category)
+                    the_file.write('\nLink: ')
+                    the_file.write(link)
+                    the_file.write('\nAbstract: ')
+                    the_file.write(abstract)
+                    the_file.write('\nARTICOLO: ')
+                    the_file.write(body)
+                    the_file.write('\n')
+                    the_file.write('The exeption was: ')
+                    the_file.write(str(e))
+
             # I consider the next article block
             # omitting len(page) because [index:] means from index to the end
             page = page[newsIndexStart+absIndexEnd:]
@@ -266,7 +275,8 @@ for company in list_of_companies:
     # end of companies loop
 # end of file
 print datetime.datetime.time(datetime.datetime.now())
-
-with open('secondScriptFINAL.txt', 'a') as the_file:
+'''
+with open('fine.txt', 'a') as the_file:
     the_file.write('\nEND OF THE FILE\n')
     the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
+'''

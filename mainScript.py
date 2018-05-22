@@ -89,17 +89,25 @@ def cleaning(text):
 from urllib2 import build_opener
 import pymysql.cursors
 
-connection = pymysql.connect(host='131.175.120.10', port='22', user='root', password='mamma93', db='mercurio', charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio',
+                             charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+# cursorObject = connection.cursor()
 
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
-                     'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli', 'Poste+italiane',
-                     'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
+                     'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli',
+                     'Poste+italiane','Prysmian', 'Recordati', 'Saipem', 'Ferragamo',
+                     'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
+with open('logFINANZAdotCOM.txt', 'a') as the_file:
+    the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
+    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
+
+
+# start cycle
 for company in list_of_companies:
     nameCompany = company
     pageIndex = 1
@@ -112,19 +120,19 @@ for company in list_of_companies:
     if 'oltre' in maximumNumberResultsBlock:
         maximumTotalNumberOfResults = 100
     else:
-        #assumptions: always 3 cypher numbers todo: release this assumption
+        #assumptions: always 3 cypher numbers
         tempIndex = maximumNumberResultsBlock.find(':') + 2
         maximumTotalNumberOfResults = maximumNumberResultsBlock[tempIndex:tempIndex+3]
         maximumTotalNumberOfResults = int(maximumTotalNumberOfResults)/10 + 1
-
+    # maximumTotalNumberOfResults
     while pageIndex < maximumTotalNumberOfResults:
         nextBlock = 0
         count = 0
-        #NOTA BENE: nella prima magina sono 9
+        # NOTA BENE: nella prima magina sono 9
         while count < 10:
-            #Block of the article
+            # Block of the article
             indexPositionStringBegin = txt.find('<div class="div_articolo">', nextBlock, len(txt))
-            #indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
+            # indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', 2)
             # mettere 2 come inizio stringa ha poco senso, se proprio bisogna metterla ha senso usare l'index di inizio
             indexPositionStringEnd = txt.find('<div class="div"></div>\n</div>', indexPositionStringBegin)
             block = txt[indexPositionStringBegin:indexPositionStringEnd]
@@ -195,8 +203,28 @@ for company in list_of_companies:
                             query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                             cursor.execute(query, [date, "finanza.com", "economy", title, bodyArticle, nameCompany, nomeAutore, linkedCompanies])
                             connection.commit()
-                    except:
-                        print(title)
+
+                    except Exception, e:
+                        print("Can't insert " + str(e))
+                        with open('logFINANZAdotCOM.txt', 'a') as the_file:
+                            the_file.write('\n\n')
+                            the_file.write(company)
+                            the_file.write(' --- ')
+                            the_file.write(str(count))
+                            the_file.write(' / ')
+                            the_file.write(str(maximumTotalNumberOfResults))
+                            the_file.write(' ---- on Date: ')
+                            the_file.write(str(date))
+                            the_file.write('\nTitle: ')
+                            the_file.write(title)
+                            the_file.write('\nLink: ')
+                            the_file.write(link)
+                            the_file.write('\nARTICOLO: ')
+                            the_file.write(bodyArticle)
+                            the_file.write('\nAUTORE: ')
+                            the_file.write(nomeAutore)
+                            the_file.write('\n')
+
                 except:
                     print 'Url was not found'
             count = count + 1
