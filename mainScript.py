@@ -104,7 +104,7 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
 
 with open('logFINANZAdotCOM.txt', 'a') as the_file:
     the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
-    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
+    '''the_file.write(str(datetime.datetime.time(datetime.datetime.now())))'''
 
 
 # start cycle
