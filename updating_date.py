@@ -15,13 +15,15 @@ cur.execute(sql)
 for row in cur:
     print (row)
     date = row['date']
+    print (date)
     idRow = int(row['id'])
+    print(idRow)
     if row['id'] < 38914:
         try:
             with connection.cursor() as cursor:
                 query = "UPDATE articles_prova_ansa SET date_correct_type= (STR_TO_DATE('%s', " \
-                        "'%%Y-%%m-%%d %%h:%%i')) WHERE articles_prova_ansa.id = %d"
-                cursor.execute(query, [date, idRow])
+                        "'%%Y-%%m-%%d %%H:%%i'))"
+                cursor.execute(query, [date])
                 connection.commit()
         except Exception, e:
             print("Can't insert date " + str(e))
