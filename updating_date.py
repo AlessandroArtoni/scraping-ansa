@@ -19,8 +19,8 @@ for row in cur:
     if row['id'] < 38914:
         try:
             with connection.cursor() as cursor:
-                query = "UPDATE `articles_prova_ansa` SET `date_correct_type` = " \
-                        "STR_TO_DATE('`%s`','`%%Y-%%m-%%d %%H:%%i`') WHERE `articles_prova_ansa.id` = `%s`"
+                query = "UPDATE articles_prova_ansa SET date_correct_type = " \
+                        "STR_TO_DATE(%s,'%%Y-%%m-%%d %%H:%%i') WHERE articles_prova_ansa.id = %s"
                 cursor.execute(query, [date, idRow])
                 connection.commit()
         except Exception, e:
