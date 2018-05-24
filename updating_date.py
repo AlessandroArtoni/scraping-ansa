@@ -14,14 +14,13 @@ sql = "SELECT id, date FROM articles_prova_ansa"
 cur.execute(sql)
 for row in cur:
     print (row)
-    print(row['date'])
-    '''
+    date = row['date']
+    idRow = row['id']
     try:
         with connection.cursor() as cursor:
-            query = "INSERT INTO articles_prova_ansa (date_correct_type) VALUES (STR_TO_DATE('%s', " \
-                    "'%%Y-%%m-%%d %%h:%%i'))"
-            cursor.execute(query, [row])
+            query = "UPDATE articles_prova_ansa SET date_correct_type= (STR_TO_DATE('%s', " \
+                    "'%%Y-%%m-%%d %%h:%%i')) WHERE articles_prova_ansa.id = %i"
+            cursor.execute(query, [date, idRow])
             connection.commit()
     except Exception, e:
         print("Can't insert date " + str(e))
-    '''
