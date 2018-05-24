@@ -13,9 +13,13 @@ cur.execute(sql)
 for row in cur:
     print (row)
     date = row['date']
-    print (date)
     idRow = int(row['id'])
-    print(idRow)
+    day = date[0:2]
+    month = date[3:5]
+    year = date[6:10]
+    time = date[11:16]
+    date = year+'-'+month+'-'+day+' '+time
+    print (date)
     if row['id'] < 38914:
         try:
             with connection.cursor() as cursor:
