@@ -88,7 +88,7 @@ def cleaning(text):
 #We import the module urlopen
 from urllib2 import build_opener
 import pymysql.cursors
-import time
+import datetime
 
 connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio',
                              charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
@@ -217,13 +217,13 @@ for company in list_of_companies:
                     indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
                     bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
                     bodyArticle = cleaning(bodyArticle)
-                    '''date = time.strptime(date, '%d-%m-%Y')'''
+                    date = datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y/%m/%d')
                     if len(bodyArticle)<10:
                         bodyArticle = 'None'
                     print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (%d-%m-%Y, %s, %s, %s, %s, %s, %s, %s)"
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (str_to_date('%s','%%d-%%m-%%Y'), %s, %s, %s, %s, %s, %s, %s)"
                             cursor.execute(query, [date, "finanza.com", "economy", title, bodyArticle, nameCompany, nomeAutore, linkedCompanies])
                             connection.commit()
 
