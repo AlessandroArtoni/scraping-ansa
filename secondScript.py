@@ -96,7 +96,7 @@ for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
 
     '''
-    with open('fine.txt', 'a') as the_file:
+    with open('logAnsa.txt', 'a') as the_file:
         the_file.write('\nEvaluating company #')
         the_file.write(str(list_of_companies.index(company)))
         the_file.write('out of #41\n')
@@ -276,7 +276,7 @@ for company in list_of_companies:
 # end of file
 print datetime.datetime.time(datetime.datetime.now())
 '''
-with open('fine.txt', 'a') as the_file:
+with open('logAnsa.txt', 'a') as the_file:
     the_file.write('\nEND OF THE FILE\n')
     the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
 '''
