@@ -87,7 +87,7 @@ def cleaning(text):
 
 #We import the module urlopen
 from urllib2 import build_opener
-import pymysql
+import pymysql.cursors
 
 connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio',
                              charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
@@ -104,7 +104,7 @@ list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 
 
 with open('logFINANZAdotCOM.txt', 'a') as the_file:
     the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
-    the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
+    '''the_file.write(str(datetime.datetime.time(datetime.datetime.now())))'''
 
 
 # start cycle
@@ -167,8 +167,7 @@ for company in list_of_companies:
             subtitle = block[indexStartSubTitle:indexEndSubtitle]
 
             # Ora mi sposto e vado sulla pagina del link, per farlo la devo prima aprire e leggere.
-            # Posso farlo pero solo se esiste l'articolo
-            # (siccome ci sono 7 / 8 / 10 articoli a pagina mi conviene fare cosi
+            #Posso farlo pero solo se esiste l'articolo (siccome ci sono 7 / 8 / 10 articoli a pagina mi conviene fare cosi
             nomeAutore = ''
             if len(title) > 1:
                 try:
@@ -188,9 +187,7 @@ for company in list_of_companies:
                         while indexStartDivLinkedCompanies >= 0:
                             indexStartLinkedCompanies = blockLinkedCompanies.find('>', indexStartDivLinkedCompanies) + 1
                             indexEndLinkedCompanies = blockLinkedCompanies.find('</a>', indexStartLinkedCompanies)
-                            linkedCompanies = \
-                                linkedCompanies + \
-                                blockLinkedCompanies[indexStartLinkedCompanies:indexEndLinkedCompanies] + ' '
+                            linkedCompanies = linkedCompanies + blockLinkedCompanies[indexStartLinkedCompanies:indexEndLinkedCompanies] + ' '
                             indexStartDivLinkedCompanies = blockLinkedCompanies.find('<a', indexEndLinkedCompanies)
                     else:
                         linkedCompanies = 'None'
@@ -200,17 +197,11 @@ for company in list_of_companies:
                     bodyArticle = cleaning(bodyArticle)
                     if len(bodyArticle)<10:
                         bodyArticle = 'None'
-                    # print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
+                    print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, " \
-                                    "section, title, eyelet, summary, category_sole, category_davide," \
-                                    " body, company, author, link_page, tagged_company) " \
-                                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-
-                            cursor.execute(query,
-                                           [date, "finanza.com", "economy", title, None, None, None, None,
-                                             bodyArticle, nameCompany, nomeAutore, link, linkedCompanies])
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                            cursor.execute(query, [date, "finanza.com", "economy", title, bodyArticle, nameCompany, nomeAutore, linkedCompanies])
                             connection.commit()
 
                     except Exception, e:
