@@ -25,4 +25,3 @@ for row in cur:
                 connection.commit()
         except Exception, e:
             print("Can't insert date " + str(e))
-UPDATE articles_prova_ansa SET date_correct_type= (STR_TO_DATE('2014-03-21 08:48','%Y-%m-%d %H:%i')) WHERE articles_prova_ansa.id = '2';
