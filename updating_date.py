@@ -16,7 +16,7 @@ for row in cur:
     update = ""
     try:
         with connection.cursor() as cursor:
-            query = "INSERT INTO articles_ansa (date_correct_type) VALUES (STR_TO_DATE('%s', '%Y/%m/%d %h:%i'))"
+            query = "INSERT INTO articles_ansa (date_correct_type) VALUES (STR_TO_DATE('%s', '%%Y/%%m/%%d %%h:%%i'))"
             cursor.execute(query, [row])
             connection.commit()
     except Exception, e:
