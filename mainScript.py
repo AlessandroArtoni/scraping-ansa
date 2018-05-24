@@ -159,6 +159,27 @@ for company in list_of_companies:
             date = block[indexStartDate:indexEndDate]
             #I format date better
             date = date.replace("&igrave;", "i")
+            date = date.lower()
+            date = date.replace("lunedi ", "")
+            date = date.replace("martedi ", "")
+            date = date.replace("mercoledi ", "")
+            date = date.replace("giovedi ", "")
+            date = date.replace("venerdi ", "")
+            date = date.replace("sabato ", "")
+            date = date.replace("domenica ", "")
+            date = date.replace(" gennaio ", "-01-")
+            date = date.replace(" febbraio ", "-02-")
+            date = date.replace(" marzo ", "-03-")
+            date = date.replace(" aprile ", "-04-")
+            date = date.replace(" maggio ", "-05-")
+            date = date.replace(" giugno ", "-06-")
+            date = date.replace(" luglio ", "-07-")
+            date = date.replace(" agosto ", "-08-")
+            date = date.replace(" settembre ", "-09-")
+            date = date.replace(" ottobre ", "-10-")
+            date = date.replace(" novembre ", "-11-")
+            date = date.replace(" dicembre ", "-12-")
+
 
             #Sottotitolo (ST)
             block = block[indexStartTitle:len(block)]
@@ -200,7 +221,7 @@ for company in list_of_companies:
                     print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (to_date(%s,'dd-mm-yyyy'), %s, %s, %s, %s, %s, %s, %s)"
                             cursor.execute(query, [date, "finanza.com", "economy", title, bodyArticle, nameCompany, nomeAutore, linkedCompanies])
                             connection.commit()
 
