@@ -14,6 +14,7 @@ sql = "SELECT id, date FROM articles_prova_ansa"
 cur.execute(sql)
 for row in cur:
     print (row)
+    print(row.date)
     '''
     try:
         with connection.cursor() as cursor:
