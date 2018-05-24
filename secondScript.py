@@ -1,5 +1,3 @@
-# todo: aprire professional / non ho ancora capito come ottenere le credenziali...
-# todo: push database
 
 import requests
 import datetime
@@ -10,14 +8,14 @@ import pymysql
 connection = pymysql.connect(host='localhost', port=3306, user='root', password='mamma93', db='mercurio',
                              charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
-
-
+# this function is used to clean the text we take from websites
 def cleaning(text):
     text = text.replace("DIV", "div")
     text = text.replace("BR", "br")
     text = text.replace("<P", "<p")
     text = text.replace("P>", "p>")
     indexStartAd = text.find('<div')
+    # some texted contained weird stuff like ads inside divs, so we cancelled also them
     while indexStartAd != -1:
         newStart = indexStartAd
         countDent = 1
@@ -45,6 +43,7 @@ def cleaning(text):
         indexEndP = text.find('>', indexP)
         text = text[:indexP] + text[indexEndP + 1:]
         indexP = text.find('<span')
+    # more hmtl characters substituted
     text = text.replace("</span>", "")
     text = text.replace("&agrave;", "a'")
     text = text.replace("&Agrave;", "A'")
@@ -67,7 +66,6 @@ def cleaning(text):
     text = text.replace("</div>", "")
     text = text.replace("<br />", "")
     text = text.replace("</strong>", "")
-    #Added some cleaning to the previous function
     text = text.replace("\n", "")
     text = text.replace("  ", " ")
     text = text.replace("   ", "")
@@ -75,26 +73,27 @@ def cleaning(text):
     text = text.replace('<br/>', '')
     return text
 
-
+# For benchmarking purposes, current time is printed
 print datetime.datetime.time(datetime.datetime.now())
 # Used to open articles web pages
 opener = build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-
+# companies to visit. Note that based on how your website behaves spaces might be different - in this case
+# ' '  wasn't allowed so '+' was used
 list_of_companies = ['A2A', 'Atlantia','Azimut', 'Banca+Generali', 'Banco+BPM', 'BPER', 'Brembo', 'Buzzi+Unicem'
                      'Campari', 'CNH', 'Enel', 'Eni', 'Exor', 'Ferrari', 'FCA', 'Fineco', 'Generali', 'Intesa+Sanpaolo',
                      'Italgas', 'Leonardo', 'Luxottica', 'Mediaset', 'Mediobanca', 'Moncler', 'Pirelli', 'Poste+italiane',
                      'Prysmian', 'Recordati', 'Saipem', 'Ferragamo', 'Snam', 'STMicroelectronics', 'Telecom', 'Tenaris',
                      'Terna', 'UBI', 'UniCredit', 'Unipol', 'UnipolSai', 'Yoox']
 
-
+# basic log to understand if something goes wrong during the database update
 with open('logANSA.txt', 'a') as the_file:
     the_file.write('START OF THE FILE. \n Here i put what went wrong in the computation \n')
     the_file.write(str(datetime.datetime.time(datetime.datetime.now())))
 
 for company in list_of_companies:
     print 'Evaluating company #', list_of_companies.index(company), ' out of 41'
-
+    # enable those lines for log
     '''
     with open('logAnsa.txt', 'a') as the_file:
         the_file.write('\nEvaluating company #')
@@ -102,7 +101,7 @@ for company in list_of_companies:
         the_file.write('out of #41\n')
     '''
 
-    # sezione '...' is actually 'Economia'
+    # section '...' is actually 'Economia', other sectios were encripted. check www.ansa.com for other sections
     post_fields = {'tiponotizia': '',
                    'any': company,
                    'sezione': '63a85942-dedb-4b31-a3bf-a06f721c67e6',
@@ -119,7 +118,7 @@ for company in list_of_companies:
         page = r.text
         numResultsIndex = page.find('num-result')+12
 
-    # Handles 2,3,4 ciphers numResults
+    # Handles 2,3,4 ciphers numResults. Some pages may have 20 results, some other 200.
     try:
         numResults = int(page[numResultsIndex:numResultsIndex+4])
     except:
@@ -166,19 +165,7 @@ for company in list_of_companies:
             absIndexEnd = newsBlock.find('</p>')
 
             abstract = newsBlock[absIndexStart:absIndexEnd].encode('utf-8')
-            '''if abstract.find('<p>') > 0 and len(link) > 19:
-                absIndexStart = newsBlock.find('<p>', absIndexStart) + 4
-                absIndexEnd = newsBlock.find('</p>', absIndexStart)
-                abstract = newsBlock[absIndexStart:absIndexEnd].encode('utf-8')
-                # print 'TRUE ONE', abstract, absIndexStart, absIndexStart
-            '''
             # I clean the abstract
-            # todo: forse replace non e esattamente il metodo migliore da usare
-            '''abstract = abstract.replace('<p>', '')
-            abstract = abstract.replace('em', '')
-            abstract = abstract.replace('<>', '')
-            abstract = abstract.replace('</>', '')
-            abstract = abstract.replace('\n', '')'''
             abstract = cleaning(abstract)
 
             count = count + 1
@@ -198,14 +185,6 @@ for company in list_of_companies:
                     bodyEndIndex = articlePage.find('</p>', bodyStartIndex)
                     body = articlePage[bodyStartIndex:bodyEndIndex].decode("utf-8")
                     # I clean the body
-                    '''body = body.replace("\n", "")
-                    body = body.replace("  ", " ")
-                    body = body.replace("   ", "")
-                    body = body.replace("\t", " ")
-                    body = body.replace("<br>", "")
-                    body = body.replace("</br>", '')
-                    body = body.replace('<br/>', '')
-                    body = body.replace("&nbsp;", "")'''
                     body = cleaning(body)
                     body = body.encode("utf-8")
                 except:
