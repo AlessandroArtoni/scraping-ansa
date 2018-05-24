@@ -217,7 +217,14 @@ for company in list_of_companies:
                     indexEndCorpoNotizia = articlePage.find('\n<div class="div_tags', indexStartCorpoNotizia)
                     bodyArticle = articlePage[indexStartCorpoNotizia:indexEndCorpoNotizia].decode("utf-8")
                     bodyArticle = cleaning(bodyArticle)
-                    date = datetime.datetime.strptime(date, '%d-%m-%Y').strftime('%Y/%m/%d')
+                    endDay = date.find("-")
+                    endMonth = date.find("-", endDay+1)
+                    day = date[:endDay]
+                    month = date[endDay+1:endMonth]
+                    year = date[endMonth+1:]
+                    date = year + "-" + month + "-" + day
+                    date = date.replace(" ", "")
+
                     if len(bodyArticle)<10:
                         bodyArticle = 'None'
                     print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
