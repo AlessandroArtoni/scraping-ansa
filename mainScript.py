@@ -221,7 +221,7 @@ for company in list_of_companies:
                     print nameCompany, linkedCompanies, ' ', count, ':', title, date, nomeAutore, link, bodyArticle
                     try:
                         with connection.cursor() as cursor:
-                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (to_date(%s,'dd-mm-yyyy'), %s, %s, %s, %s, %s, %s, %s)"
+                            query = "INSERT INTO articles_finanza_com (date, newspaper, section, title, body, company, author, tagged_companies) VALUES (STR_TO_DATE(%s, '%d-%M-%Y'), %s, %s, %s, %s, %s, %s, %s)"
                             cursor.execute(query, [date, "finanza.com", "economy", title, bodyArticle, nameCompany, nomeAutore, linkedCompanies])
                             connection.commit()
 
