@@ -1,5 +1,3 @@
-# todo: aprire professional / non ho ancora capito come ottenere le credenziali...
-# todo: push database
 
 import requests
 import datetime
@@ -21,9 +19,10 @@ for row in cur:
     if row['id'] < 38914:
         try:
             with connection.cursor() as cursor:
-                query = "UPDATE articles_prova_ansa SET date_correct_type= (STR_TO_DATE('%s', " \
-                        "'%%Y-%%m-%%d %%H:%%i')) WHERE articles_prova_ansa.id = %s"
+                query = "UPDATE articles_prova_ansa SET date_correct_type= " \
+                        "(STR_TO_DATE('%s','%%Y-%%m-%%d %%H:%%i')) WHERE articles_prova_ansa.id = %s"
                 cursor.execute(query, [date, idRow])
                 connection.commit()
         except Exception, e:
             print("Can't insert date " + str(e))
+UPDATE articles_prova_ansa SET date_correct_type= (STR_TO_DATE('2014-03-21 08:48','%Y-%m-%d %H:%i')) WHERE articles_prova_ansa.id = '2';
