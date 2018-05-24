@@ -22,8 +22,9 @@ for row in cur:
     date = year+'-'+month+'-'+day+' '+time
     try:
         with connection.cursor() as cursor:
+            # check consistency in up, set and where
             query = "UPDATE articles_ansa SET data_mod = " \
-                    "STR_TO_DATE(%s,'%%Y-%%m-%%d %%H:%%i') WHERE data_mod.id = %s"
+                    "STR_TO_DATE(%s,'%%Y-%%m-%%d %%H:%%i') WHERE articles_ansa.id = %s"
             cursor.execute(query, [date, idRow])
             connection.commit()
     except Exception, e:
